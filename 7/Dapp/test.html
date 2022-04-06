@@ -1,0 +1,136 @@
+<html>
+
+<head>
+    <meta charset = "UTF-8">
+    <title>情報セキュリティ研究室 : Dapp</title>
+    <script src = "setup.js">
+    </script>
+    </head>
+
+    <body>
+        <div>
+            <p><strong>情報セキュリティ研究室</strong>
+            </p>
+            <p>アンケート投票</p>
+            <p>&nbsp;</p>
+            <p>最新のアンケートを取得:&nbsp;
+                <button onclick="getPoll()">アンケート取得</button>
+            </p>
+            <p>
+                <div id = "pollSubject"></div>
+            </p>
+            <p>&nbsp;</p>
+            <p>投票:賛成:
+                <input type="radio" id="yes">
+                反対:
+                <input type="radio" id="no">
+            </p>
+            <p>&nbsp;</p>
+            <p>送信:&nbsp;
+                <button onclick="checkPoll()">投票結果を送信</button>
+            </p>
+            <p>&nbsp;</p>
+            <p>投票内容の確認:&nbsp;
+                <button onclick="getPoll()">投票内容の取得</button>
+            </p>
+            <p>
+                <div id = "checkSubject"></div>
+            </p>
+        </div>
+        <script>
+            if (typeof web3 !== 'undefined') {
+                web3 = new Web3(web3.currrentProvider);
+            }else{
+                web3 = new Web3(new web3.providers.HttpProvider(
+                    'http://127.0.0.1:8507'
+                ));
+            }
+            function checkPoll(){
+                var pollingContract = new web3.eth.Contract(
+                    [
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "selection",
+				"type": "uint256"
+			}
+		],
+		"name": "vote",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_voter",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "Voted",
+		"type": "event"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "checkPoll",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getPoll",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "votes",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	    }], '0x59E7161646C3436DFdF5eBE617B4A172974B481e');
+        pollingContract.methods.vote(value).send({
+            from: '0x6BDe07009dbb0d4bEDc9f8e24d17c724f074ba5B'
+        }).then(function (result){
+            console.log(result);
+        });
+    }; </script>
+    </body>
+</html>
